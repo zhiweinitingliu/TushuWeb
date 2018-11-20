@@ -8,12 +8,36 @@
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-<!-- 告诉spring 创建容器时要扫描的包 -->
-<context:component-scan base-package="com.dukang">
-		
-</context:component-scan>
 
-<!-- 配置spring的试图解析器 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters
+			register-defaults="true">
+			<!-- 配置Fastjson支持 -->
+			<bean
+				class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+						<value>application/json</value>
+					</list>
+				</property>
+				<property name="features">
+					<list>
+						<value>WriteMapNullValue</value>
+						<value>QuoteFieldNames</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- 告诉spring 创建容器时要扫描的包 -->
+	<context:component-scan
+		base-package="com.dukang">
+
+	</context:component-scan>
+
+	<!-- 配置spring的试图解析器 -->
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="contentType" value="text/html;charset=UTF-8"></property>
