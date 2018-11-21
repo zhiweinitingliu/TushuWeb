@@ -1,5 +1,7 @@
 package com.dukang.tushu.dao;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Repository;
 
 import com.dukang.tushu.domain.User;
@@ -11,4 +13,13 @@ public interface UserDao {
 	 * @param id 用户id
 	 */
 	public User selectUserById(Integer id);
+	
+	/**
+	 * 用户登陆
+	 * 
+	 * @param userName
+	 * @param password
+	 * @return
+	 */
+	public User doLogin(Map<String,Object> map);
 }
