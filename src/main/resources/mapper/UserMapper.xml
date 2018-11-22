@@ -21,4 +21,9 @@
 		select * from ts_user  WHERE user_name= #{userName} and user_password=#{password}
 	</select>
 	
+		<!-- 保存token -->
+	<insert id="saveUserToken" parameterType="Map">
+		insert INTO ts_token (token,user_id) VALUES (#{token},#{userId})
+	</insert>
+	
 </mapper>

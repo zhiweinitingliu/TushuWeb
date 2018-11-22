@@ -7,8 +7,8 @@ public class ResponseData {
 	
 	public static final String ERRORS_KEY = "errors";
 	
-	private final String message;
 	private final int code;
+	private final String message;
 	private final Map<String, Object> data = new HashMap<>();
  
 	public String getMessage() {

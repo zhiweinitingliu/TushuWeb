@@ -22,4 +22,12 @@ public interface UserDao {
 	 * @return
 	 */
 	public User doLogin(Map<String,Object> map);
+	
+	
+	/**
+	 * 保存用户的token
+	 * @param map
+	 * @return
+	 */
+	public int saveUserToken(Map<String,Object> map);
 }

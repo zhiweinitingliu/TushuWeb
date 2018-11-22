@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.dukang.tushu.domain.BaseResultBean;
 import com.dukang.tushu.domain.User;
 import com.dukang.tushu.service.IUserService;
+import com.dukang.tushu.service.utils.ResponseData;
 
 @Controller
 public class UserController {
@@ -32,13 +33,16 @@ public class UserController {
 	
 	@RequestMapping(value="/login_act",method=RequestMethod.POST)
 	@ResponseBody
-	public BaseResultBean doLogin(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseData doLogin(HttpServletRequest request, HttpServletResponse response) {
 		String userName=request.getParameter("user_name");
 		String password=request.getParameter("password");
 		String token=userService.doLogin(userName,password);	
 		BaseResultBean baseResultBean=new BaseResultBean();
 		baseResultBean.setCode(200);
 		baseResultBean.setToken(token);
-		return baseResultBean;
+		
+		ResponseData responseData=ResponseData.ok();
+		responseData.putDataValue("token", token);
+		return responseData;
 	}
 }
