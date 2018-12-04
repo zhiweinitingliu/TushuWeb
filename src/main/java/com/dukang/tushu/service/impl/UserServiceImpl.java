@@ -33,6 +33,7 @@ public class UserServiceImpl implements IUserService {
 	 */
 	@Override
 	public String doLogin(String userName, String password) {
+		
 		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap();
 		map.put("userName", userName);
