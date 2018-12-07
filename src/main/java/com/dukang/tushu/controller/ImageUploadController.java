@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.dukang.tushu.domain.ImageBean;
 import com.dukang.tushu.service.IImageUploadService;
 import com.dukang.tushu.service.utils.ResponseData;
 
@@ -18,15 +19,22 @@ public class ImageUploadController {
 	@Autowired
 	private IImageUploadService imageUploadService;
 
-	@RequestMapping(value="/upload_image",method=RequestMethod.POST)
+	@RequestMapping(value = "/upload_image", method = RequestMethod.POST)
 	@ResponseBody
 	private ResponseData uploadImage(HttpServletRequest request, HttpServletResponse response) {
-		int resultCode=imageUploadService.uploadImage(request, response);
-		if (resultCode==1) {
-			return ResponseData.ok();
+	
+		try {
+			ImageBean imageBean = imageUploadService.uploadImage(request, response);
+			if (imageBean!=null) {
+				return ResponseData.ok().putDataValue("image_info", imageBean);
+			}
+			return ResponseData.badRequest("上传失败");
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return ResponseData.badRequest(e.getMessage());
 		}
-		
-		return ResponseData.badRequest();
 
 	}
 

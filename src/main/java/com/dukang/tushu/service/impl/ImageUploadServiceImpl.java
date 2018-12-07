@@ -3,8 +3,11 @@ package com.dukang.tushu.service.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,13 +17,19 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.stereotype.Service;
 
+import com.dukang.tushu.dao.ImageUploadDao;
+import com.dukang.tushu.domain.ImageBean;
 import com.dukang.tushu.service.IImageUploadService;
+import com.dukang.tushu.service.utils.FileNameUtil;
 
 @Service("imageUploadService")
 public class ImageUploadServiceImpl implements IImageUploadService {
 
+	@Resource
+	private ImageUploadDao imageUploadDao;
+
 	@Override
-	public int uploadImage(HttpServletRequest request, HttpServletResponse response) {
+	public ImageBean uploadImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		// 设置上传图片的保存路径
 
 		String filename = null;
@@ -39,7 +48,7 @@ public class ImageUploadServiceImpl implements IImageUploadService {
 		// 3、判断提交上来的数据是否是上传表单的数据
 		if (!ServletFileUpload.isMultipartContent(request)) {
 			// 按照传统方式获取数据
-			return 0;
+			throw new Exception("上传的不是文件类型");
 		}
 
 		try {
@@ -55,13 +64,21 @@ public class ImageUploadServiceImpl implements IImageUploadService {
 				// (文件名、目录名或卷标语法不正确。)
 
 				filename = filename.substring(filename.lastIndexOf("\\") + 1);
-//						System.out.print(filename);
+				System.out.print(filename);
 				if (filename.substring(filename.lastIndexOf(".") + 1).equals("png")
 						|| filename.substring(filename.lastIndexOf(".") + 1).equals("jpg")
 						|| filename.substring(filename.lastIndexOf(".") + 1).equals("jpeg")) {
+
+					// 文件的名称
+					String preFileName = FileNameUtil.creatAloneFileName();
+					// 文件的扩展
+					String fileExtend = filename.substring(filename.lastIndexOf(".") + 1);
+					filename = preFileName + "." + fileExtend;
+
 					InputStream in = item.getInputStream();// 獲得上傳的輸入流
 					FileOutputStream out = new FileOutputStream(savePath + "\\" + filename);// 指定web-inf目錄下的images文件
 					request.setAttribute("path", "images" + "\\" + filename);
+					System.out.print(savePath + "\\" + filename);
 
 					int len = 0;
 					byte buffer[] = new byte[1024];
@@ -72,16 +89,29 @@ public class ImageUploadServiceImpl implements IImageUploadService {
 					in.close();
 					out.close();
 					item.delete();
+
+					// 图片上传完毕，将图片信息写入图片表，并且将图片的完整路径和图片id返回给用户
+//					Map<String, Object> map = new HashMap<>();
+//					map.put("url", "tushu\\images\\");
+//					map.put("image_name", filename);
+//					map.put("full_url", "tushu\\images\\" + filename);
+					ImageBean imageBean=new ImageBean();
+					imageBean.setUrl("tushu\\images\\");
+					imageBean.setImage_name(filename);
+					imageBean.setFull_url( "tushu\\images\\" + filename);
+
+					imageUploadDao.saveImageInfo(imageBean);
+					return imageBean;
+
 				} else { // 必须是图片才能上传否则失败
-					return 0;
+					throw new Exception("上传的不是图片类型");
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new Exception("上传失败");
 		}
-		
-		return 1;
-
+		return null;
 	}
 
 }

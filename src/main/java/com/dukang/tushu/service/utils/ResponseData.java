@@ -41,8 +41,8 @@ public class ResponseData {
 		return new ResponseData(404, "Not Found");
 	}
 	
-	public static ResponseData badRequest() {
-		return new ResponseData(400, "Bad Request");
+	public static ResponseData badRequest(String errorMsg) {
+		return new ResponseData(400, errorMsg);
 	}
 	
 	public static ResponseData forbidden() {
