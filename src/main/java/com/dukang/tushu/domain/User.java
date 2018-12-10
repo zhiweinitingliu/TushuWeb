@@ -3,7 +3,7 @@ package com.dukang.tushu.domain;
 public class User {
 
 	private int id;
-	private String name;
+	private String user_name;
 
 	public int getId() {
 		return id;
@@ -13,12 +13,14 @@ public class User {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getUser_name() {
+		return user_name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
 	}
+
+	
 
 }

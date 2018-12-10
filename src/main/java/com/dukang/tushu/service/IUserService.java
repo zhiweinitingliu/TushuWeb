@@ -19,4 +19,5 @@ public interface IUserService {
 	 * @return
 	 */
 	public String doLogin(String userName, String password);
+	
 }

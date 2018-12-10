@@ -43,6 +43,7 @@ public class UserServiceImpl implements IUserService {
 		String token = null;
 		try {
 			token = JwtToken.createToken(user.getId());
+			System.out.println(token);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			throw new BusinessException(400, "token 创建失败");
