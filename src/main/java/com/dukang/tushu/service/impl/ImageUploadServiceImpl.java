@@ -3,16 +3,12 @@ package com.dukang.tushu.service.impl;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.springframework.stereotype.Service;
@@ -21,6 +17,7 @@ import com.dukang.tushu.dao.ImageUploadDao;
 import com.dukang.tushu.domain.ImageBean;
 import com.dukang.tushu.service.IImageUploadService;
 import com.dukang.tushu.service.utils.FileNameUtil;
+import com.dukang.tushu.service.utils.Utils;
 
 @Service("imageUploadService")
 public class ImageUploadServiceImpl implements IImageUploadService {
@@ -33,7 +30,9 @@ public class ImageUploadServiceImpl implements IImageUploadService {
 		// 设置上传图片的保存路径
 
 		String filename = null;
-		String savePath = request.getServletContext().getRealPath("/images");
+//		String savePath = request.getServletContext().getRealPath("");
+		String savePath = Utils.getImageSaveUrl(request);
+		System.out.println(savePath);
 		File file = new File(savePath);
 		// 判断上传文件的保存目录是否存在
 		if (!file.exists() && !file.isDirectory()) {
@@ -64,7 +63,7 @@ public class ImageUploadServiceImpl implements IImageUploadService {
 				// (文件名、目录名或卷标语法不正确。)
 
 				filename = filename.substring(filename.lastIndexOf("\\") + 1);
-				System.out.print(filename);
+				System.out.print("filename:" + filename);
 				if (filename.substring(filename.lastIndexOf(".") + 1).equals("png")
 						|| filename.substring(filename.lastIndexOf(".") + 1).equals("jpg")
 						|| filename.substring(filename.lastIndexOf(".") + 1).equals("jpeg")) {
@@ -76,9 +75,7 @@ public class ImageUploadServiceImpl implements IImageUploadService {
 					filename = preFileName + "." + fileExtend;
 
 					InputStream in = item.getInputStream();// 獲得上傳的輸入流
-					FileOutputStream out = new FileOutputStream(savePath + "\\" + filename);// 指定web-inf目錄下的images文件
-					request.setAttribute("path", "images" + "\\" + filename);
-					System.out.print(savePath + "\\" + filename);
+					FileOutputStream out = new FileOutputStream(savePath + filename);// 指定web-inf目錄下的images文件
 
 					int len = 0;
 					byte buffer[] = new byte[1024];
@@ -95,11 +92,8 @@ public class ImageUploadServiceImpl implements IImageUploadService {
 //					map.put("url", "tushu\\images\\");
 //					map.put("image_name", filename);
 //					map.put("full_url", "tushu\\images\\" + filename);
-					ImageBean imageBean=new ImageBean();
-					imageBean.setUrl("tushu\\images\\");
+					ImageBean imageBean = new ImageBean();
 					imageBean.setImage_name(filename);
-					imageBean.setFull_url( "tushu\\images\\" + filename);
-
 					imageUploadDao.saveImageInfo(imageBean);
 					return imageBean;
 
@@ -109,7 +103,7 @@ public class ImageUploadServiceImpl implements IImageUploadService {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception("上传失败");
+			throw new Exception("上传失败" + savePath);
 		}
 		return null;
 	}

@@ -16,7 +16,7 @@
 
 	<!-- 保存图片 -->
 	<insert id="saveImageInfo" parameterType="com.dukang.tushu.domain.ImageBean" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO ts_image (url,image_name,full_url)  VALUES (#{url},#{image_name},#{full_url})
+		INSERT INTO ts_image (image_name)  VALUES (#{image_name})
 	</insert>
 
 
