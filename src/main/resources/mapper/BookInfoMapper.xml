@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dukang.tushu.dao.BookInfoDao">
+	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！ -->
+	<resultMap id="BaseResultMap"
+		type="com.dukang.tushu.domain.BookInfoBean">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<insert id="uploadBookInfo"
+		parameterType="com.dukang.tushu.domain.BookInfoBean">
+		INSERT INTO
+		ts_book (name,auth,publish_house,image,image_id,publish_user_id)
+		VALUES
+		(#{name},#{auth},#{publish_house},#{image},#{image_id},#{publish_user_id})
+	</insert>
+
+</mapper>
